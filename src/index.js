@@ -10,19 +10,66 @@ app.use(cors());
 const users = [];
 
 function checksExistsUserAccount(request, response, next) {
-  // Complete aqui
+    const { username } = request.headers;
+    const user = users.find((user) => user.username === username);
+    if(!user) {
+       return response.status(404).json({ error: "user dont exists"})
+    }
+    
+    request.user = user;
+    next();
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+    const { user } = request;
+
+    if((user.pro == false && length(user.todos) <= 10) || user.pro == true ) {
+        next();
+    }
+    if(user.pro == false && length(user.todos) > 10 ) {
+        response.status(403).send();
+    }
+    
 }
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
+    const { username } = request.headers;
+    const { id } = request.params;
+
+    const user = users.find((user) => user.username === username);
+
+    
+    
+    if(!user) {
+        response.status(404).json({ 'error': 'user does not exists'});
+    }
+    if(true) {
+        if(true) {
+
+            request.user = user;
+            request.todo = user.todo;
+            next();
+        }
+    }
+    var expreg = new RegExp("/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i");
+    if(expreg.test(id) == false) {
+        return response.status(400).send();
+    }
+
+    if( id != users.todo.id) {
+        response.status(404).json({ 'error': 'user does not exists'});
+    }
 }
 
 function findUserById(request, response, next) {
-  // Complete aqui
+    const { id } = request.params;
+    const user = users.find((user) => user.id === id);
+    if(!user) {
+       return response.status(404).json({ error: "user dont exists"})
+    }
+    
+    request.user = user;
+    next();
 }
 
 app.post('/users', (request, response) => {
